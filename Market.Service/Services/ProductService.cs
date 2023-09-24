@@ -3,6 +3,7 @@ using Market.Data.IRepositories;
 using Market.Domain.Configurations;
 using Market.Domain.Entities.Products;
 using Market.Service.DTOs;
+using Market.Service.Exceptions;
 using Market.Service.Helpers;
 using Market.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -68,9 +69,7 @@ namespace Market.Service.Services
         {
             var product = await _productRepository.GetAsync(x => x.Id == id);
             if(product is null)
-            {
-                throw new Exception("Product not found");
-            }
+                throw new MarketException(404,"Product not found");
 
             var mappedProduct = _mapper.Map(dto,product);
             var updatedProduct = await _productRepository.UpdateAsync(product);

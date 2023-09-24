@@ -1,6 +1,8 @@
-﻿using Market.Data.IRepositories;
+﻿using Azure.Core;
+using Market.Data.IRepositories;
 using Market.Domain.Configurations;
 using Market.Domain.Entities.Products;
+using Market.Service.Exceptions;
 using Market.Service.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -29,7 +31,11 @@ namespace Market.Service.Services
 
         public async Task<ProductCategory> GetCategoryAsync(Expression<Func<ProductCategory, bool>> expression = null)
         {
-            return await _productCategoryRepository.GetAsync(expression);
+            var category = await _productCategoryRepository.GetAsync(expression);
+            if (category is null)
+                throw new MarketException(404, "Product category not found");
+
+            return category;
         }
 
         public async Task<List<ProductCategory>> GetCategoryWithProductsAsync(PaginationParams @params, Expression<Func<ProductCategory, bool>> expression = null)
@@ -42,13 +48,13 @@ namespace Market.Service.Services
         public async Task<ProductCategory> UpdateCategoryAsync(long id, string dto)
         {
             var productCategory = await _productCategoryRepository.GetAsync(x => x.Id == id);
-            if(productCategory is not null) 
-            {
-                productCategory.Name = dto;
-                productCategory.UpdatedAt = DateTime.UtcNow;
+            if(productCategory is null) 
+                throw new MarketException(404,"Category not found");
 
-                await _productCategoryRepository.SaveChangesAsync();
-            }
+            productCategory.Name = dto;
+            productCategory.UpdatedAt = DateTime.UtcNow;
+
+            await _productCategoryRepository.SaveChangesAsync();
 
             return productCategory;
         }
@@ -56,13 +62,11 @@ namespace Market.Service.Services
         public async Task<bool> DeleteCategoryAsync(Expression<Func<ProductCategory, bool>> expression)
         {
             var productCategory = await _productCategoryRepository.GetAsync(expression);
-            if (productCategory is not null)
-            {
-                await _productCategoryRepository.DeleteAsync(expression);
-                await _productCategoryRepository.SaveChangesAsync();
+            if (productCategory is null)
+                throw new MarketException(404, "Category not found");
 
-                return true;
-            }
+            await _productCategoryRepository.DeleteAsync(expression);
+            await _productCategoryRepository.SaveChangesAsync();
 
             return false;
         }
