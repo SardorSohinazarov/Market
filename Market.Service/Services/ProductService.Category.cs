@@ -11,27 +11,25 @@ namespace Market.Service.Services
 {
     public partial class ProductService
     {
-        private readonly IProductCategoryRepository _productCategoryRepository;
-
         public async Task<ProductCategory> AddCategoryAsync(string category)
         {
-            var result = await _productCategoryRepository.AddAsync(new ProductCategory() { Name = category });
+            var result = await _unitOfWork.ProductCategories.AddAsync(new ProductCategory() { Name = category });
 
-            await _productCategoryRepository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             return result;
         }
 
         public async Task<List<ProductCategory>> GetAllCategoriesAsync(PaginationParams @params, Expression<Func<ProductCategory, bool>> expression = null)
         {
-            var pagenedList = _productCategoryRepository.GetAll(expression, tracking: false).ToPagedList(@params);
+            var pagenedList = _unitOfWork.ProductCategories.GetAll(expression, tracking: false).ToPagedList(@params);
 
             return await pagenedList.ToListAsync();
         }
 
         public async Task<ProductCategory> GetCategoryAsync(Expression<Func<ProductCategory, bool>> expression = null)
         {
-            var category = await _productCategoryRepository.GetAsync(expression);
+            var category = await _unitOfWork.ProductCategories.GetAsync(expression);
             if (category is null)
                 throw new MarketException(404, "Product category not found");
 
@@ -40,33 +38,33 @@ namespace Market.Service.Services
 
         public async Task<List<ProductCategory>> GetCategoryWithProductsAsync(PaginationParams @params, Expression<Func<ProductCategory, bool>> expression = null)
         {
-            var pagenedList = _productCategoryRepository.GetAll(expression,"Products", tracking: false).ToPagedList(@params);
+            var pagenedList = _unitOfWork.ProductCategories.GetAll(expression,"Products", tracking: false).ToPagedList(@params);
 
             return await pagenedList.ToListAsync();
         }
 
         public async Task<ProductCategory> UpdateCategoryAsync(long id, string dto)
         {
-            var productCategory = await _productCategoryRepository.GetAsync(x => x.Id == id);
+            var productCategory = await _unitOfWork.ProductCategories.GetAsync(x => x.Id == id);
             if(productCategory is null) 
                 throw new MarketException(404,"Category not found");
 
             productCategory.Name = dto;
             productCategory.UpdatedAt = DateTime.UtcNow;
 
-            await _productCategoryRepository.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             return productCategory;
         }
 
         public async Task<bool> DeleteCategoryAsync(Expression<Func<ProductCategory, bool>> expression)
         {
-            var productCategory = await _productCategoryRepository.GetAsync(expression);
+            var productCategory = await _unitOfWork.ProductCategories.GetAsync(expression);
             if (productCategory is null)
                 throw new MarketException(404, "Category not found");
 
-            await _productCategoryRepository.DeleteAsync(expression);
-            await _productCategoryRepository.SaveChangesAsync();
+            await _unitOfWork.ProductCategories.DeleteAsync(expression);
+            await _unitOfWork.SaveChangesAsync();
 
             return false;
         }

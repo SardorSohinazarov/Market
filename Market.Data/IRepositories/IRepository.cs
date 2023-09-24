@@ -9,6 +9,5 @@ namespace Market.Data.IRepositories
         Task<TSourse> GetAsync(Expression<Func<TSourse,bool>> expression = null, string include = null);
         Task<TSourse> UpdateAsync(TSourse entity);
         Task DeleteAsync(Expression<Func<TSourse,bool>> expression);
-        Task SaveChangesAsync(); 
     }
 }

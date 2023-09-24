@@ -1,9 +1,6 @@
+using Market.Api.Extensions;
 using Market.Data.DbContexts;
-using Market.Data.IRepositories;
-using Market.Data.Repositories;
-using Market.Service.Interfaces;
 using Market.Service.Mappers;
-using Market.Service.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,10 +12,7 @@ builder.Services.AddDbContext<MarketDbContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(MapperProfile));
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
-
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddCostumServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
