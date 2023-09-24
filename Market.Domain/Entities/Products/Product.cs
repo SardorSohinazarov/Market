@@ -1,4 +1,5 @@
 ﻿using Market.Domain.Commons;
+using Market.Domain.Entities.Common;
 
 namespace Market.Domain.Entities.Products
 {
@@ -9,5 +10,8 @@ namespace Market.Domain.Entities.Products
 
         public long CategoryId { get; set; }
         public ProductCategory Category { get; set; }
+
+        public long? FileId { get; set; }
+        public Attachment File { get; set; }
     }
 }

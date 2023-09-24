@@ -1,5 +1,7 @@
 ﻿using Market.Data.DbContexts;
 using Market.Data.IRepositories;
+using Market.Domain.Entities.Common;
+using Market.Domain.Entities.Products;
 
 namespace Market.Data.Repositories
 {
@@ -11,13 +13,16 @@ namespace Market.Data.Repositories
         {
             _dbContext = dbContext;
 
-            Products = new ProductRepository(_dbContext);
-            ProductCategories = new ProductCategoryRepository(_dbContext);
+            Products = new Repository<Product>(_dbContext);
+            ProductCategories = new Repository<ProductCategory>(_dbContext);
+            Attachments = new Repository<Attachment>(_dbContext);
         }
 
+        public IRepository<Product> Products { get; }
+        public IRepository<ProductCategory> ProductCategories {  get; }
+        public IRepository<Attachment> Attachments { get; }
+
         //DbSet
-        public IProductRepository Products { get; }
-        public IProductCategoryRepository ProductCategories { get; }
 
         public void Dispose()
         {

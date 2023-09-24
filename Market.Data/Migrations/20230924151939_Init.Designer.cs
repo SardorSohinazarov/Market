@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.Data.Migrations
 {
     [DbContext(typeof(MarketDbContext))]
-    [Migration("20230923224154_Init")]
+    [Migration("20230924151939_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -24,6 +24,33 @@ namespace Market.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Market.Domain.Entities.Common.Attachment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Attachments");
+                });
 
             modelBuilder.Entity("Market.Domain.Entities.Products.Product", b =>
                 {
@@ -39,6 +66,9 @@ namespace Market.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("FileId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -52,6 +82,8 @@ namespace Market.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("FileId");
 
                     b.ToTable("Products");
                 });
@@ -87,7 +119,13 @@ namespace Market.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Market.Domain.Entities.Common.Attachment", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId");
+
                     b.Navigation("Category");
+
+                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("Market.Domain.Entities.Products.ProductCategory", b =>
