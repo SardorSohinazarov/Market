@@ -21,13 +21,7 @@ namespace Market.Api.Controllers
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetAsync([FromRoute(Name = "Id")] long id)
-        {
-            var product = await _productService.GetAsync(p => p.Id == id);
-            if (product is null)
-                return StatusCode(StatusCodes.Status404NotFound, "Product not found");
-
-            return Ok(product);
-        }
+            => Ok(await _productService.GetAsync(p => p.Id == id));
 
         [HttpPost]
         public async Task<IActionResult> AddAsync(ProductForCreationDto dto)

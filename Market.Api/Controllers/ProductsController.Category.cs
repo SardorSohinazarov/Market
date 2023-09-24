@@ -11,7 +11,7 @@ namespace Market.Api.Controllers
             => Ok(await _productService.AddCategoryAsync(name));
 
         [HttpGet("Categories")]
-        public async Task<ActionResult<IEnumerable<ProductCategory>>> GetAllCategoryAsync([FromQuery] PaginationParams @params)
+        public async Task<IActionResult> GetAllCategoryAsync([FromQuery] PaginationParams @params)
             => Ok(await _productService.GetCategoryWithProductsAsync(@params));
 
         [HttpGet("Categories/{Id}")]
