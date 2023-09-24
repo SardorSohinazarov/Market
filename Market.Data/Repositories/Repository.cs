@@ -52,10 +52,5 @@ namespace Market.Data.Repositories
 
             _dbSet.Remove(entity);
         }
-
-        public async Task SaveChangesAsync()
-        {
-            await _dbContext.SaveChangesAsync();
-        }
     }
 }
