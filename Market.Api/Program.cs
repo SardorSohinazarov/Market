@@ -1,5 +1,7 @@
 using Market.Api.Extensions;
+using Market.Api.Middlewares;
 using Market.Data.DbContexts;
+using Market.Service.Helpers;
 using Market.Service.Mappers;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +27,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+EnvironmentHelper.WebRootPath = app.Services.GetService<IWebHostEnvironment>()?.WebRootPath;
+
+app.UseMiddleware<MarketExceptionMiddleware>();
+
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

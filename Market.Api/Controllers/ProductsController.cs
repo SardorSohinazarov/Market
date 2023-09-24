@@ -24,7 +24,7 @@ namespace Market.Api.Controllers
             => Ok(await _productService.GetAsync(p => p.Id == id));
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync(ProductForCreationDto dto)
+        public async Task<IActionResult> AddAsync([FromForm]ProductForCreationDto dto)
             => Ok(await _productService.AddAsync(dto));
 
         [HttpPut("{id}")]
