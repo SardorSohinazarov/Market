@@ -27,11 +27,11 @@ namespace Market.Api.Controllers
         public async Task<IActionResult> AddAsync([FromForm]ProductForCreationDto dto)
             => Ok(await _productService.AddAsync(dto));
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(ProductForCreationDto dto, [FromRoute(Name = "Id")] long Id)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> UpdateAsync([FromForm]ProductForCreationDto dto, [FromRoute(Name = "Id")] long Id)
             => Ok(await _productService.UpdateAsync(Id, dto));
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute(Name = "Id")] long id)
             => Ok(await _productService.DeleteAsync(p => p.Id == id));
 
