@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using Market.Data.IRepositories;
-using Market.Domain.Configurations;
+﻿using Market.Domain.Configurations;
 using Market.Domain.Entities.Products;
 using Market.Service.Exceptions;
 using Market.Service.Helpers;
