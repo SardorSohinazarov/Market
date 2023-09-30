@@ -64,7 +64,7 @@ namespace Market.Service.Services
             await _unitOfWork.ProductCategories.DeleteAsync(expression);
             await _unitOfWork.SaveChangesAsync();
 
-            return false;
+            return true;
         }
     }
 }

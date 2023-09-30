@@ -4,10 +4,12 @@ using Market.Data.DbContexts;
 using Market.Service.Helpers;
 using Market.Service.Mappers;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);                    
 
 builder.Services.AddDbContext<MarketDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
